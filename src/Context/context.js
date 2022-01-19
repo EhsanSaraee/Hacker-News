@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { createContext, useContext, useEffect, useReducer } from 'react';
-import { REMOVE_STORY, SET_LOADING, SET_STORIES } from '../Redux/actions';
+import {
+   HANDLE_PAGE,
+   HANDLE_SEARCH,
+   REMOVE_STORY,
+   SET_LOADING,
+   SET_STORIES,
+} from '../Redux/actions';
 import reducer from '../Redux/reducer';
 
 const API_ENDPOINT = 'http://hn.algolia.com/api/v1/search?';
@@ -36,12 +42,22 @@ const AppProvider = ({ children }) => {
       dispatch({ type: REMOVE_STORY, payload: id });
    };
 
+   const handleSearch = (query) => {
+      dispatch({ type: HANDLE_SEARCH, payload: query });
+   };
+
+   const handlePage = (value) => {
+      dispatch({ type: HANDLE_PAGE, payload: value });
+   };
+
    useEffect(() => {
       fetchStories(`${API_ENDPOINT}query=${query}&page=${page}`);
    }, [query, page]);
 
    return (
-      <AppContext.Provider value={{ ...state, removeStory }}>
+      <AppContext.Provider
+         value={{ ...state, removeStory, handleSearch, handlePage }}
+      >
          {children}
       </AppContext.Provider>
    );
