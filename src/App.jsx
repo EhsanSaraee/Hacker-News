@@ -1,7 +1,13 @@
+import Buttons from './Components/Buttons';
+import SearchForm from './Components/SearchForm';
+import Stories from './Components/Stories';
+
 const App = () => {
    return (
       <>
-         <h1>Hacker News</h1>
+         <SearchForm />
+         <Buttons />
+         <Stories />
       </>
    );
 };

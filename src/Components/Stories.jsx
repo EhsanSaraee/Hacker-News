@@ -1,7 +1,12 @@
+import { useGlobalContext } from '../Context/context';
+
 const Stories = () => {
-  return ( 
-    <h2>stories component</h2>
-   );
-}
- 
+   const { isLoading } = useGlobalContext();
+
+   if (isLoading) {
+      return <div className="loading"></div>;
+   }
+   return <h2>stories component</h2>;
+};
+
 export default Stories;
