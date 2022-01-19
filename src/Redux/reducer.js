@@ -1,4 +1,4 @@
-import { SET_LOADING, SET_STORIES } from './actions';
+import { REMOVE_STORY, SET_LOADING, SET_STORIES } from './actions';
 
 const reducer = (state, action) => {
    const { type, payload } = action;
@@ -11,6 +11,13 @@ const reducer = (state, action) => {
             isLoading: false,
             hits: payload.hits,
             nbPages: payload.nbPages,
+         };
+      case REMOVE_STORY:
+         return {
+            ...state,
+            hits: state.hits.filter(
+               (story) => story.objectID !== action.payload
+            ),
          };
       default:
          return state;
