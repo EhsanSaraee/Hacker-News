@@ -1,11 +1,16 @@
+import axios from 'axios';
 import { createContext, useContext, useEffect, useReducer } from 'react';
-import { SET_LOADING } from '../Redux/actions';
+import { SET_LOADING, SET_STORIES } from '../Redux/actions';
 import reducer from '../Redux/reducer';
 
-const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?';
+const API_ENDPOINT = 'http://hn.algolia.com/api/v1/search?';
 
 const initialState = {
    isLoading: true,
+   hits: [],
+   query: 'react',
+   page: 0,
+   nbPages: 0,
 };
 
 const AppContext = createContext();
@@ -15,19 +20,27 @@ const AppProvider = ({ children }) => {
 
    const fetchStories = async (url) => {
       dispatch({ type: SET_LOADING });
+      try {
+         const { data } = await axios.get(url);
+         dispatch({
+            type: SET_STORIES,
+            payload: { hits: data.hits, nbPages: data.nbPages },
+         });
+      } catch (error) {
+         console.log(error);
+      }
    };
+   const { page, query } = state;
 
    useEffect(() => {
-      fetchStories();
-   }, []);
+      fetchStories(`${API_ENDPOINT}query=${query}&page=${page}`);
+   }, [query, page]);
 
    return (
       <AppContext.Provider value={{ ...state }}>{children}</AppContext.Provider>
    );
 };
 // make sure use
-export const useGlobalContext = () => {
-   return useContext(AppContext);
-};
+export const useGlobalContext = () => useContext(AppContext);
 
 export { AppProvider };
